@@ -50,7 +50,7 @@ Here are some notes about the idiosyncrasies of localized strings in SIC-1 (and 
 
 * Annoyingly, react-intl's **ICU Message format uses ASCII apostrophe (`'`) as an escape character**, so you'll generally need to type `''` to get a single apostrophe (but note that `'` used in English contractions works fine, so `don't` would work--sadly, I don't see this documented anywhere)
 * **The "languageName" string is a special case**--it is read at build-time instead of run-time to populate a list of languages using their native name, so be sure to replace that string's default "English" string with the name *of the language being translate* (instead of translating the name of the English language itself)
-* **The syntax of SIC-1 Assembly Language is *not* localized**, so `subleq` and `.data` should *never* be localized (but non-ASCII identifiers *are* supported)
+* **The syntax of SIC-1 Assembly Language is *not* localized**, so `addleq` and `.data` should *never* be localized (but non-ASCII identifiers *are* supported)
 * **Some fields use HTML markup** (e.g. `<h3>Title</h3>`)--please use the same tags and *do not* use any additional tags (because they will not work) -- if additional tags are needed, open a issue with more details
 * **Some fields supply a `{nbsp}` parameter for adding non-breaking spaces**--this is generally just for aligning "to" and "from" lines for aesthetic purposes--consider this optional, but recommended
 * Note that Steam achievements when windowed are produced by Steam's UI, so they use the game's language as selected in Steam and *not* SIC-1's own localized strings

@@ -333,7 +333,7 @@ export class Sic1Ide extends React.Component<Sic1IdeProperties, Sic1IdeState> {
             const breakpointSet = new Set(assembledProgram.breakpoints);
 
             const sourceLineToBreakpointState = Object.fromEntries(Object.entries(assembledProgram.sourceMap)
-                .filter(([address, sme]) => (sme && sme.command === Command.subleqInstruction))
+                .filter(([address, sme]) => (sme && sme.command === Command.addleqInstruction))
                 .map(([address, sme]) => [sme.lineNumber, breakpointSet.has(parseInt(address))]));
 
             this.setState({

@@ -13,6 +13,6 @@ It's an assembly language zachlike for everyone! New programmers will appreciate
 
 [i]SIC Systems is hiring engineers to produce highly efficient programs for our flagship product: the Single Instruction Computer Mark 1 (SIC-1).
 
-The SIC-1 represents a transformational change in computing, reducing complexity to the point that the processor only executes a single instruction: subtract and branch if less than or equal to zero ("subleq").
+The SIC-1 represents a transformational change in computing, reducing complexity to the point that the processor only executes a single instruction: subtract and branch if less than or equal to zero ("addleq").
 
 Enter the brave new world of single-instruction computing and invent new ways of implementing programs that would be trivial on a conventional computer. Don't adjust the technology to match how you think, adjust your thinking to match how the SIC-1 operates![/i]

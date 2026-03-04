@@ -63,37 +63,37 @@ export function initializePuzzles(intl: IntlShape): ClientPuzzleInfo {
             />,
             list: [
                 {
-                    ...titleToPuzzle["Subleq Instruction and Output"],
-                    title: "Subleq Instruction and Output",
+                    ...titleToPuzzle["addleq Instruction and Output"],
+                    title: "addleq Instruction and Output",
                     minimumSolvedToUnlock: 0,
                     displayTitle: intl.formatMessage({
-                        id: "puzzleTitleSubleq Instruction and Output",
-                        description: "Title of the 'Subleq Instruction and Output' puzzle",
-                        defaultMessage: "Subleq Instruction and Output",
+                        id: "puzzleTitleaddleq Instruction and Output",
+                        description: "Title of the 'addleq Instruction and Output' puzzle",
+                        defaultMessage: "addleq Instruction and Output",
                     }),
                     description: intl.formatMessage({
-                        id: "puzzleDescriptionSubleq Instruction and Output",
-                        description: "Description of the 'Subleq Instruction and Output' puzzle",
-                        defaultMessage: "Use subleq and input/output to negate an input and write it out.",
+                        id: "puzzleDescriptionaddleq Instruction and Output",
+                        description: "Description of the 'addleq Instruction and Output' puzzle",
+                        defaultMessage: "Use addleq and input/output to negate an input and write it out.",
                     }),
                     hint: intl.formatMessage({
-                        id: "puzzleHintSubleq Instruction and Output",
-                        description: "Hint for the 'Subleq Instruction and Output' puzzle",
+                        id: "puzzleHintaddleq Instruction and Output",
+                        description: "Hint for the 'addleq Instruction and Output' puzzle",
                         defaultMessage: "<p>This task has already been solved. Just click <strong>Run</strong>.</p>",
                     }),
                     code: intl.formatMessage({
-                        id: "puzzleCodeSubleq Instruction and Output",
-                        description: "Initial code for the 'Subleq Instruction and Output' puzzle",
+                        id: "puzzleCodeaddleq Instruction and Output",
+                        description: "Initial code for the 'addleq Instruction and Output' puzzle",
                         defaultMessage:
 `; The Single Instruction Computer Mark 1 (SIC-1) is an 8-bit computer with 256 bytes of memory. Programs for the SIC-1 are written in SIC-1 Assembly Language.
 ;
 ; Each instruction is 3 bytes, specified as follows:
 ;
-;   subleq A B [C]
+;   addleq A B [C]
 ;
 ; A, B, and C are memory addresses (0 - 255) or labels.
 ;
-; \"subleq\" subtracts the value at address B from the value at address A and stores the result at address A (i.e. mem[A] ← mem[A] - mem[B]).
+; \"addleq\" subtracts the value at address B from the value at address A and stores the result at address A (i.e. mem[A] ← mem[A] - mem[B]).
 ;
 ; If the result is ≤ 0, execution branches to address C.
 ;
@@ -112,7 +112,7 @@ export function initializePuzzles(intl: IntlShape): ClientPuzzleInfo {
 ;
 ; E.g. if the input value from @IN is 3, it subtracts 3 from @OUT (which reads as zero), and the result of 0 - 3 = -3 is written out.
 
-subleq @OUT, @IN
+addleq @OUT, @IN
 
 ; Use the \"Compile/Step\" (Ctrl+.) and \"Run\" (Ctrl+Enter) buttons to execute the program until all expected outputs have been successfully written out (see the \"In\"/\"Expected\"/\"Out\" table to the left).
     `,
@@ -143,9 +143,9 @@ subleq @OUT, @IN
                         defaultMessage:
 `; Custom labels are defined by putting \"@name: \" at the beginning of a line, e.g.:
 ;
-;   @loop: subleq 1, 2
+;   @loop: addleq 1, 2
 ;
-; In addition to \"subleq\", there is an assembler directive \".data\" that sets a byte of memory to a value at compile time (note: this is not an instruction!):
+; In addition to \"addleq\", there is an assembler directive \".data\" that sets a byte of memory to a value at compile time (note: this is not an instruction!):
 ;
 ;   .data X
 ;
@@ -159,15 +159,15 @@ subleq @OUT, @IN
 ;
 ; Variables can be used for implementing an unconditional jump:
 ;
-;   subleq @zero, @zero, @next
+;   addleq @zero, @zero, @next
 ;
 ; This will set @zero to @zero - @zero (still zero) and, since the result is always ≤ 0, execution branches to @next.
 ;
 ; Below is an updated negation program that repeatedly negates input values and writes them out in a loop.
 
 @loop:
-subleq @OUT, @IN
-subleq @zero, @zero, @loop
+addleq @OUT, @IN
+addleq @zero, @zero, @loop
 
 @zero: .data 0
 `
@@ -196,14 +196,14 @@ subleq @zero, @zero, @loop
                         id: "puzzleCodeFirst Assessment",
                         description: "Initial code for the 'First Assessment' puzzle",
                         defaultMessage:
-`; Now that you understand the \"subleq\" instruction, the \".data\" directive, and labels, you should be able to read values from input and write the exact same values out, by negating the value twice.
+`; Now that you understand the \"addleq\" instruction, the \".data\" directive, and labels, you should be able to read values from input and write the exact same values out, by negating the value twice.
 ;
 ; Below is an almost complete solution. You will need to replace instances of \"???\". Hint: use a label that points to a storage location for a (negated) value.
 
 @loop:
-subleq ???, @IN
-subleq @OUT, ???
-subleq @tmp, @tmp, @loop  ; Reset @tmp to zero, and jump to @loop
+addleq ???, @IN
+addleq @OUT, ???
+addleq @tmp, @tmp, @loop  ; Reset @tmp to zero, and jump to @loop
 
 @tmp: .data 0
 `
@@ -247,9 +247,9 @@ subleq @tmp, @tmp, @loop  ; Reset @tmp to zero, and jump to @loop
 ; Below is the solution to the previous task. You will need to add additional code to perform addition of two inputs (instead of passing through a single input):
 
 @loop:
-subleq @tmp, @IN
-subleq @OUT, @tmp
-subleq @tmp, @tmp, @loop  ; Reset @tmp to zero, and jump to @loop
+addleq @tmp, @IN
+addleq @OUT, @tmp
+addleq @tmp, @tmp, @loop  ; Reset @tmp to zero, and jump to @loop
 
 @tmp: .data 0
 `
@@ -293,7 +293,7 @@ subleq @tmp, @tmp, @loop  ; Reset @tmp to zero, and jump to @loop
                     hint: intl.formatMessage({
                         id: "puzzleHintSign Function",
                         description: "Hint for the 'Sign Function' puzzle",
-                        defaultMessage: "<p>Use the \"branch if result is ≤ 0\" property of subleq to branch between code blocks, then use (negated) constants to write the appropriate output.</p>",
+                        defaultMessage: "<p>Use the \"branch if result is ≤ 0\" property of addleq to branch between code blocks, then use (negated) constants to write the appropriate output.</p>",
                     }),
                 },
                 {
@@ -442,9 +442,9 @@ subleq @tmp, @tmp, @loop  ; Reset @tmp to zero, and jump to @loop
                         defaultMessage:
 `; Label expressions can include an optional offset. For example, @loop+1 refers to the second byte of the instruction pointed to by @loop:
 ;
-;   subleq @loop+1, @one
+;   addleq @loop+1, @one
 ;
-; This is useful in self-modifying code. Remember, each \"subleq\" instruction is stored as 3 consecutive addresses, ABC:
+; This is useful in self-modifying code. Remember, each \"addleq\" instruction is stored as 3 consecutive addresses, ABC:
 ;
 ; mem[A] ← mem[A] - mem[B], with a branch to C if the result is less than or equal to zero.
 ;
@@ -453,10 +453,10 @@ subleq @tmp, @tmp, @loop  ; Reset @tmp to zero, and jump to @loop
 ; Note: When running a program, the original (unmodified) source code is always shown. If the program modifies itself, the changes are reflected in the memory table in the top right, but *not* in the source code viewer.
 
 @loop:
-subleq @tmp, 0           ; Second address (initially zero) will be incremented
-subleq @OUT, @tmp        ; Output the value
-subleq @loop+1, @n_one   ; Here is where the increment is performed
-subleq @tmp, @tmp, @loop
+addleq @tmp, 0           ; Second address (initially zero) will be incremented
+addleq @OUT, @tmp        ; Output the value
+addleq @loop+1, @n_one   ; Here is where the increment is performed
+addleq @tmp, @tmp, @loop
 
 @tmp: .data 0
 @n_one: .data -1
@@ -493,25 +493,25 @@ subleq @tmp, @tmp, @loop
 ; The first address of this instruction (which starts pointing to @stack) will be incremented with each write to the stack
 
 @stack_push:
-subleq @stack, @IN
-subleq @count, @one, @prepare_to_pop
+addleq @stack, @IN
+addleq @count, @one, @prepare_to_pop
 
 ; Modify the instruction at @stack_push (increment target address)
-subleq @stack_push, @n_one
-subleq @tmp, @tmp, @stack_push
+addleq @stack_push, @n_one
+addleq @tmp, @tmp, @stack_push
 
 ; Prepare to start popping values off of the stack by copying the current stack position to @stack_pop+1
 @prepare_to_pop:
-subleq @tmp, @stack_push
-subleq @stack_pop+1, @tmp
+addleq @tmp, @stack_push
+addleq @stack_pop+1, @tmp
 
 ; Read a value from the stack (note: the second address of this instruction is repeatedly decremented)
 @stack_pop:
-subleq @OUT, 0
+addleq @OUT, 0
 
 ; Decrement stack address in the instruction at @stack_pop
-subleq @stack_pop+1, @one
-subleq @tmp, @tmp, @stack_pop
+addleq @stack_pop+1, @one
+addleq @tmp, @tmp, @stack_pop
 
 ; Constants
 @one: .data 1
@@ -693,8 +693,8 @@ subleq @tmp, @tmp, @stack_pop
 ;
 ; The following sample program outputs the characters "Hi":
 
-subleq @OUT, @n_H ; Note: (0 - (-72) = 72 = 'H')
-subleq @OUT, @n_i
+addleq @OUT, @n_H ; Note: (0 - (-72) = 72 = 'H')
+addleq @OUT, @n_i
 
 @n_H: .data -'H'
 @n_i: .data -'i'
@@ -819,9 +819,9 @@ subleq @OUT, @n_i
 ; The following code outputs "Hello, world!":
 
 @loop:
-subleq @OUT, @n_message  ; Read address starts at @n_message
-subleq @loop+1, @n_one   ; Advance read address
-subleq @tmp, @tmp, @loop
+addleq @OUT, @n_message  ; Read address starts at @n_message
+addleq @loop+1, @n_one   ; Advance read address
+addleq @tmp, @tmp, @loop
 
 @n_one: .data -1
 @n_message: .data -"Hello, world!"
@@ -1000,32 +1000,32 @@ subleq @tmp, @tmp, @loop
                     }),
                 },
                 {
-                    ...titleToPuzzle["Parse Subleq Instructions"],
-                    title: "Parse Subleq Instructions",
+                    ...titleToPuzzle["Parse addleq Instructions"],
+                    title: "Parse addleq Instructions",
                     minimumSolvedToUnlock: 28,
                     inputFormat: Format.strings,
                     displayTitle: intl.formatMessage({
-                        id: "puzzleTitleParse Subleq Instructions",
-                        description: "Title of the 'Parse Subleq Instructions' puzzle",
-                        defaultMessage: "Parse Subleq Instructions",
+                        id: "puzzleTitleParse addleq Instructions",
+                        description: "Title of the 'Parse addleq Instructions' puzzle",
+                        defaultMessage: "Parse addleq Instructions",
                     }),
                     description: intl.formatMessage({
-                        id: "puzzleDescriptionParse Subleq Instructions",
-                        description: "Description of the 'Parse Subleq Instructions' puzzle",
-                        defaultMessage: "Parse a program with multiple subleq instructions and output the compiled program.",
+                        id: "puzzleDescriptionParse addleq Instructions",
+                        description: "Description of the 'Parse addleq Instructions' puzzle",
+                        defaultMessage: "Parse a program with multiple addleq instructions and output the compiled program.",
                     }),
                     hint: intl.formatMessage({
-                        id: "puzzleHintParse Subleq Instructions",
-                        description: "Hint for the 'Parse Subleq Instructions' puzzle",
+                        id: "puzzleHintParse addleq Instructions",
+                        description: "Hint for the 'Parse addleq Instructions' puzzle",
                         defaultMessage: "<p>This task is very similar to \"Parse Decimal\".</p>",
                     }),
                     code: intl.formatMessage({
-                        id: "puzzleCodeParse Subleq Instructions",
-                        description: "Initial code for the 'Parse Subleq Instructions' puzzle",
+                        id: "puzzleCodeParse addleq Instructions",
+                        description: "Initial code for the 'Parse addleq Instructions' puzzle",
                         defaultMessage:
-`; Parse a program with multiple subleq instructions and output the compiled program.
+`; Parse a program with multiple addleq instructions and output the compiled program.
 ;
-; Each subleq instruction specifies 3 addresses, separated by spaces (' '). The addresses are on the range [0, 255] (inclusive).
+; Each addleq instruction specifies 3 addresses, separated by spaces (' '). The addresses are on the range [0, 255] (inclusive).
 ;
 ; Note that the unsigned (nonnegative) addresses will be written out as signed values on the range [-128, 127] (also inclusive). For example, 255 becomes -1, 254 becomes -2, ..., 128 becomes -128, but 127 and below are unchanged.
 
@@ -1057,7 +1057,7 @@ subleq @tmp, @tmp, @loop
                         id: "puzzleCodeSelf-Hosting",
                         description: "Initial code for the 'Self-Hosting' puzzle",
                         defaultMessage:
-`; Parse a program containing .data directives and subleq instructions, then execute that program.
+`; Parse a program containing .data directives and addleq instructions, then execute that program.
 ;
 ; All addresses used by the input program should be isolated from your program's address space.
 ;
@@ -1067,7 +1067,7 @@ subleq @tmp, @tmp, @loop
 ;
 ; The compiled size of each input program is ≤ 21 bytes.
 ;
-; As in previous tasks, the .data directive will always have exactly 1 value and subleq instructions will specify exactly 3 addresses (separated by spaces only).
+; As in previous tasks, the .data directive will always have exactly 1 value and addleq instructions will specify exactly 3 addresses (separated by spaces only).
 ;
 ; Additionally, the input programs will not use self-modifying code or declare/use any labels or variables. The only built-in addresses that will be used will be referenced by address instead of label (e.g. "254" will be used but "@OUT" will not).
 
@@ -1099,13 +1099,13 @@ subleq @tmp, @tmp, @loop
                         id: "puzzleCodeSelf-Hosting Part 2",
                         description: "Initial code for the 'Self-Hosting Part 2' puzzle",
                         defaultMessage:
-`; Parse a self-modifying program containing .data directives and subleq instructions, then execute that program.
+`; Parse a self-modifying program containing .data directives and addleq instructions, then execute that program.
 ;
 ; Writes to address @OUT should be directly written out. If the program branches to address @HALT, then the program is done. Start over from scratch with the next input program.
 ;
 ; The compiled size of each input program is ≤ 21 bytes.
 ;
-; As in previous tasks, the .data directive will always have exactly 1 value and subleq instructions will specify exactly 3 addresses (separated by spaces only) and no labels will be used.
+; As in previous tasks, the .data directive will always have exactly 1 value and addleq instructions will specify exactly 3 addresses (separated by spaces only) and no labels will be used.
 
 `
                     }),

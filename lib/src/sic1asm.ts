@@ -1,6 +1,6 @@
 // Valid tokens
 export const Syntax = {
-    subleqInstruction: "subleq",
+    addleqInstruction: "addleq",
     dataDirective: ".data",
     referencePrefix: "@",
     commentDelimiter: ";",
@@ -8,7 +8,7 @@ export const Syntax = {
 };
 
 const addressMax = 255;
-const subleqInstructionBytes = 3;
+const addleqInstructionBytes = 3;
 
 export const Constants = {
     // Valid values
@@ -17,7 +17,7 @@ export const Constants = {
 
     // Valid addresses
     addressMin: 0,
-    addressInstructionMax: addressMax - subleqInstructionBytes,
+    addressInstructionMax: addressMax - addleqInstructionBytes,
     addressMax,
 
     // Built-in addresses
@@ -26,7 +26,7 @@ export const Constants = {
     addressOutput: 254,
     addressHalt: 255,
 
-    subleqInstructionBytes,
+    addleqInstructionBytes,
 } as const;
 
 const CompilationErrorTypes = [
@@ -38,7 +38,7 @@ const CompilationErrorTypes = [
     "InvalidCommandError",
     "InvalidDataArgumentCountError",
     "InvalidEscapeCodeError",
-    "InvalidSubleqArgumentCountError",
+    "InvalidaddleqArgumentCountError",
     "InvalidTokenError",
     "InvalidValueExpressionError",
     "LabelAlreadyDefinedError",
@@ -73,7 +73,7 @@ export class CompilationError extends Error {
 }
 
 export enum Command {
-    subleqInstruction,
+    addleqInstruction,
     dataDirective
 }
 
@@ -257,7 +257,7 @@ export class Tokenizer {
 
 export class Assembler {
     private static readonly CommandStringToCommand: { [commandName: string]: Command } = {
-        [Syntax.subleqInstruction]: Command.subleqInstruction,
+        [Syntax.addleqInstruction]: Command.addleqInstruction,
         [Syntax.dataDirective]: Command.dataDirective,
     }
 
@@ -438,7 +438,7 @@ export class Assembler {
                     text: commandName,
                 };
 
-                throw new CompilationError("InvalidCommandError", `Unknown command: "${errorContext.text}" (valid commands are: "subleq" and ".data")`, errorContext);
+                throw new CompilationError("InvalidCommandError", `Unknown command: "${errorContext.text}" (valid commands are: "addleq" and ".data")`, errorContext);
             }
     
             // Add arguments
@@ -481,7 +481,7 @@ export class Assembler {
                 // Parse the argument
                 if (index < tokens.length) {
                     switch (command) {
-                        case Command.subleqInstruction:
+                        case Command.addleqInstruction:
                             expressions.push(Assembler.parseAddressExpression(tokens[index], context));
                             offset++;
                             break;
@@ -505,7 +505,7 @@ export class Assembler {
 
             // Check argument count
             switch (command) {
-                case Command.subleqInstruction:
+                case Command.addleqInstruction:
                     if (argumentCount < 2 || argumentCount > 3) {
                         const errorContext: CompilationContext = {
                             ...context,
@@ -514,7 +514,7 @@ export class Assembler {
                             rangeMax: 3,
                         };
 
-                        throw new CompilationError("InvalidSubleqArgumentCountError", `Invalid number of arguments for "subleq": ${errorContext.number} (must be between ${errorContext.rangeMin} and ${errorContext.rangeMax}, inclusive)`, errorContext);
+                        throw new CompilationError("InvalidaddleqArgumentCountError", `Invalid number of arguments for "addleq": ${errorContext.number} (must be between ${errorContext.rangeMin} and ${errorContext.rangeMax}, inclusive)`, errorContext);
                     }
                     break;
 
@@ -532,8 +532,8 @@ export class Assembler {
             }
         }
 
-        if (breakpoint && command !== Command.subleqInstruction) {
-            throw new CompilationError("InvalidBreakpointError", "Breakpoints are only supported on subleq instructions", context);
+        if (breakpoint && command !== Command.addleqInstruction) {
+            throw new CompilationError("InvalidBreakpointError", "Breakpoints are only supported on addleq instructions", context);
         }
 
         return {
@@ -706,8 +706,8 @@ export class Assembler {
 
                         let nextAddress = address;
                         switch (assembledLine.command) {
-                            case Command.subleqInstruction:
-                                nextAddress += Constants.subleqInstructionBytes;
+                            case Command.addleqInstruction:
+                                nextAddress += Constants.addleqInstructionBytes;
                                 if (lineExpressions.length < 3) {
                                     expressions.push(nextAddress);
                                 }

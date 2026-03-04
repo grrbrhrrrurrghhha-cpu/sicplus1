@@ -38,12 +38,12 @@ export const storyMails = [
             description="HTML content for story mail s0_0"
             defaultMessage={`<h3>Single Instruction Computer Mark 1 (SIC-1)</h3>
 <p>The Single Instruction Computer Mark 1 (SIC-1) is an 8-bit computer with 256 bytes of memory. Programs for the SIC-1 are written in SIC-1 Assembly Language, as described below.</p>
-<h3><code>subleq</code> instruction</h3>
-<p>Each <code>subleq</code> instruction is 3 bytes, specified as follows:</p>
-<pre><code>subleq A B [C]
+<h3><code>addleq</code> instruction</h3>
+<p>Each <code>addleq</code> instruction is 3 bytes, specified as follows:</p>
+<pre><code>addleq A B [C]
 </code></pre>
 <p><code>A</code>, <code>B</code>, and <code>C</code> are memory addresses (0 - 255) or labels.</p>
-<p><code>subleq</code> subtracts the value at address <code>B</code> from the value at address <code>A</code> and stores the result at address <code>A</code> (i.e. <code>mem[A]</code> is set to <code>mem[A] - mem[B]</code>).</p>
+<p><code>addleq</code> subtracts the value at address <code>B</code> from the value at address <code>A</code> and stores the result at address <code>A</code> (i.e. <code>mem[A]</code> is set to <code>mem[A] - mem[B]</code>).</p>
 <p>If the result is ≤ 0, execution branches to address <code>C</code>.</p>
 <p>Note that if <code>C</code> is not specified, the address of the next instruction is automatically added by the assembler (in effect, this means that taking the branch is no different from advancing to the next instruction).</p>
 <h3>Built-in addresses</h3>
@@ -54,22 +54,22 @@ export const storyMails = [
 <li><code>@OUT</code> (254): Writes a result to output (reads as zero)</li>
 <li><code>@HALT</code> (255): Terminates the program when accessed (reads and write are ignored)</li>
 </ul>
-<h3><code>subleq</code> example</h3>
+<h3><code>addleq</code> example</h3>
 <p>Below is a very simple SIC-1 program that negates one input value and writes it out.</p>
 <p>E.g. if the input value from <code>@IN</code> is 3, it subtracts 3 from <code>@OUT</code> (which reads as zero), and the result of 0 - 3 = -3 is written out.</p>
-<pre><code>subleq @OUT, @IN
+<pre><code>addleq @OUT, @IN
 </code></pre>
 <h3>Comments</h3>
 <p>Any text following a semicolon is considered a comment. Comments are ignored by the assembler, but may be helpful to humans attempting to decipher existing programs. For example, here''s the previous line of assembly with an explanatory comment:</p>
-<pre><code>subleq @OUT, @IN ; Negates an input and writes it out
+<pre><code>addleq @OUT, @IN ; Negates an input and writes it out
 </code></pre>
 <h3>Labels</h3>
 <p>Custom labels are defined with the syntax <code>@name:</code>, e.g.:</p>
-<pre><code>@loop: subleq 1, 2
+<pre><code>@loop: addleq 1, 2
 </code></pre>
 <p>Label names cannot include punctuation, symbols, or whitespace.</p>
 <h3><code>.data</code> directive</h3>
-<p>In addition to <code>subleq</code>, there is an assembler directive <code>.data</code> that sets one or more bytes of memory to specific values at compile time (note: this is not an instruction!):</p>
+<p>In addition to <code>addleq</code>, there is an assembler directive <code>.data</code> that sets one or more bytes of memory to specific values at compile time (note: this is not an instruction!):</p>
 <pre><code>.data X
 </code></pre>
 <p>In the simplest case, <code>X</code> is a signed byte between -128 and 127 (inclusive).</p>
@@ -83,21 +83,21 @@ export const storyMails = [
 </code></pre>
 <h3>Unconditional jumps</h3>
 <p>Variables can be used for implementing an unconditional jump:</p>
-<pre><code>subleq @zero, @zero, @next
+<pre><code>addleq @zero, @zero, @next
 </code></pre>
 <p>This will set <code>@zero</code> to zero minus zero (still zero) and, since the result is always ≤ 0, execution always branches to the label <code>@next</code>.</p>
 <h3>Loop example</h3>
 <p>Below is an updated negation program that repeatedly negates input values and writes them out in a loop.</p>
 <pre><code>@loop:
-subleq @OUT, @IN           ; Negate an input and write it out
-subleq @zero, @zero, @loop ; Unconditional jump to @loop
+addleq @OUT, @IN           ; Negate an input and write it out
+addleq @zero, @zero, @loop ; Unconditional jump to @loop
 
 @zero: .data 0             ; Always zero
 </code></pre>
 <h3>Label offsets</h3>
 <p>Label expressions can include an optional offset. For example, <code>@loop+1</code> refers to the <em>second</em> byte of the instruction pointed to by <code>@loop</code>:</p>
 <pre><code>@loop:
-subleq @loop+1, @one
+addleq @loop+1, @one
 </code></pre>
 <p>Note: in certain cases (usually involving self-modifying code), it is useful to store the address associated with a label (possibly with an offset) in a byte of memory. Here is an example of how to set a byte of memory to the address of <code>@loop+1</code> (i.e. the <em>second</em> byte of the instruction at <code>@loop</code>):</p>
 <pre><code>; Address of the second byte of @loop
@@ -109,22 +109,22 @@ subleq @loop+1, @one
 </code></pre>
 <h3>Inline labels</h3>
 <p>As an alternative to offsets, labels can be defined inline. For example <code>@source</code> refers to the <em>second</em> byte of the following instruction:</p>
-<pre><code>subleq 0, @source:1
+<pre><code>addleq 0, @source:1
 </code></pre>
 <h3>Reflection example</h3>
-<p>Label offsets and inline labels are useful in self-modifying code. Remember, each <code>subleq</code> instruction is stored as 3 consecutive addresses: <code>ABC</code> (for <code>mem[A] ← mem[A] - mem[B]</code>, with a branch to <code>C</code> if the result is less than or equal to zero).</p>
+<p>Label offsets and inline labels are useful in self-modifying code. Remember, each <code>addleq</code> instruction is stored as 3 consecutive addresses: <code>ABC</code> (for <code>mem[A] ← mem[A] - mem[B]</code>, with a branch to <code>C</code> if the result is less than or equal to zero).</p>
 <p>The sample program below reads its own compiled code and outputs it by incrementing the second address of the instruction at <code>@loop</code> (i.e. modifying address <code>@loop+1</code>).</p>
 <pre><code>@loop:
-subleq @tmp, 0           ; Second address (initially zero) will be incremented below
-subleq @OUT, @tmp        ; Output the value
-subleq @loop+1, @n_one   ; Here is where the increment is performed
-subleq @tmp, @tmp, @loop ; Reset @tmp to zero and unconditionally jump to @loop
+addleq @tmp, 0           ; Second address (initially zero) will be incremented below
+addleq @OUT, @tmp        ; Output the value
+addleq @loop+1, @n_one   ; Here is where the increment is performed
+addleq @tmp, @tmp, @loop ; Reset @tmp to zero and unconditionally jump to @loop
 
 @tmp: .data 0            ; @tmp is initialized to zero
 @n_one: .data -1
 </code></pre>
 <p>The third instruction is an example of self-modifying code because it actually modifies the first instruction. Specifically, it increments the first instruction''s second address (<code>@loop+1</code>). This causes the <em>next</em> loop iteration''s first instruction to read the <em>next</em> byte of memory (0, 1, 2, 3, ...).</p>
-<p>The program above used a label with an offset, but it could have just as easily been written using an inline label (e.g. defining a <em>new</em> label, <code>subleq @tmp, @source:0</code>, and referring to <code>@source</code> instead of <code>@loop+1</code>). Both approaches compile down to the same sequence of bytes.</p>
+<p>The program above used a label with an offset, but it could have just as easily been written using an inline label (e.g. defining a <em>new</em> label, <code>addleq @tmp, @source:0</code>, and referring to <code>@source</code> instead of <code>@loop+1</code>). Both approaches compile down to the same sequence of bytes.</p>
 <p>Note: When running a program in the SIC-1 Development Environment, the original (unmodified) source code is always shown. If the program modifies itself, the changes are reflected in the memory table in the top right, but <em>not</em> in the source code viewer.</p>
 <h3>Stack example</h3>
 <p>This program implements a last-in, first-out stack by modifying the read and write addresses of the instructions that interact with the stack.</p>
@@ -133,28 +133,28 @@ subleq @tmp, @tmp, @loop ; Reset @tmp to zero and unconditionally jump to @loop
 ; pointing to @stack) will be incremented with each
 ; write to the stack
 @stack_push:
-subleq @stack, @IN
-subleq @count, @one, @prepare_to_pop
+addleq @stack, @IN
+addleq @count, @one, @prepare_to_pop
 
 ; Modify the instruction at @stack_push (increment
 ; target address)
-subleq @stack_push, @n_one
-subleq @tmp, @tmp, @stack_push
+addleq @stack_push, @n_one
+addleq @tmp, @tmp, @stack_push
 
 ; Prepare to start popping values off of the stack by
 ; copying the current stack position to @stack_pop+1
 @prepare_to_pop:
-subleq @tmp, @stack_push
-subleq @stack_pop+1, @tmp
+addleq @tmp, @stack_push
+addleq @stack_pop+1, @tmp
 
 ; Read a value from the stack (note: the second address
 ; of this instruction is repeatedly decremented)
 @stack_pop:
-subleq @OUT, 0
+addleq @OUT, 0
 
 ; Decrement stack address in the instruction at @stack_pop
-subleq @stack_pop+1, @one
-subleq @tmp, @tmp, @stack_pop
+addleq @stack_pop+1, @one
+addleq @tmp, @tmp, @stack_pop
 
 ; Constants
 @one: .data 1
@@ -182,8 +182,8 @@ subleq @tmp, @tmp, @stack_pop
 </code></pre>
 <h3>Character output example</h3>
 <p>The following sample program outputs the characters "Hi":</p>
-<pre><code>subleq @OUT, @n_H ; Note: (0 - (-72) = 72 = ''H'')
-subleq @OUT, @n_i
+<pre><code>addleq @OUT, @n_H ; Note: (0 - (-72) = 72 = ''H'')
+addleq @OUT, @n_i
 
 @n_H: .data -''H''
 @n_i: .data -''i''
@@ -209,9 +209,9 @@ subleq @OUT, @n_i
 <h3>String output example</h3>
 <p>The following code outputs "Hello, world!":</p>
 <pre><code>@loop:
-subleq @OUT, @n_message  ; Read address starts at @n_message
-subleq @loop+1, @n_one   ; Advance read address
-subleq @tmp, @tmp, @loop
+addleq @OUT, @n_message  ; Read address starts at @n_message
+addleq @loop+1, @n_one   ; Advance read address
+addleq @tmp, @tmp, @loop
 
 @n_one: .data -1
 @n_message: .data -"Hello, world!"
@@ -229,12 +229,12 @@ subleq @tmp, @tmp, @loop
 <h3>Errata</h3>
 <p>In order to reduce the time-to-market for the SIC-1, some compromises were made in the design of the processor and these design decisions may result in surprising behavior. This section is an attempt to document such cases:</p>
 <ol>
-<li>For the purposes of calculating the number of memory bytes read, every <code>subleq</code> instruction reads all 3 bytes, regardless of whether or not the final address is used (i.e. regardless of whether or not the branch is taken)</li>
-<li><code>subleq</code> instructions (meaning the 3 addresses that comprise the instruction) are always read directly from memory; additionally, memory addresses 253, 254, and 255 cannot be modified and are initialized to zero, so the instruction starting at <code>@MAX</code> (comprised of bytes 252, 253, and 254) will be read as: <code>mem[252]</code>, 0, 0</li>
-<li><code>subleq @IN, B, C</code> will consume an input in order to compute the result ("input minus <code>mem[B]</code>"), which is used to decide whether to branch to <code>C</code> or not (even though no value will be written because writes to <code>@IN</code> are ignored)</li>
-<li><code>subleq @IN, @IN</code> will only consume a single input and the result will always be zero</li>
+<li>For the purposes of calculating the number of memory bytes read, every <code>addleq</code> instruction reads all 3 bytes, regardless of whether or not the final address is used (i.e. regardless of whether or not the branch is taken)</li>
+<li><code>addleq</code> instructions (meaning the 3 addresses that comprise the instruction) are always read directly from memory; additionally, memory addresses 253, 254, and 255 cannot be modified and are initialized to zero, so the instruction starting at <code>@MAX</code> (comprised of bytes 252, 253, and 254) will be read as: <code>mem[252]</code>, 0, 0</li>
+<li><code>addleq @IN, B, C</code> will consume an input in order to compute the result ("input minus <code>mem[B]</code>"), which is used to decide whether to branch to <code>C</code> or not (even though no value will be written because writes to <code>@IN</code> are ignored)</li>
+<li><code>addleq @IN, @IN</code> will only consume a single input and the result will always be zero</li>
 <li>Branching to any address above <code>@MAX</code> (252) will halt execution</li>
-<li><code>subleq A, B, @IN</code> may branch to <code>@IN</code> (253), which will halt (see previous bullet)</li>
+<li><code>addleq A, B, @IN</code> may branch to <code>@IN</code> (253), which will halt (see previous bullet)</li>
 </ol>
 `}
             values={{ asciiTable }}
@@ -275,10 +275,10 @@ subleq @tmp, @tmp, @loop
 </ul>
 <p>The memory table is shown in hexadecimal for compactness; hover over a cell to see the corresponding decimal value.</p>
 <p>During execution, the current instruction will be highlighted in both the code editor (center) and the memory table (upper right), current inputs and outputs are highlighted in the tables on the left, and variables are displayed in a table on the right (hover for hexadecimal and unsigned representations, if needed).</p>
-<p>To aid debugging, it is possible to set breakpoints on <code>subleq</code> instructions. When hit, these breakpoints will pause execution for manual analysis. There are two ways to set breakpoints:</p>
+<p>To aid debugging, it is possible to set breakpoints on <code>addleq</code> instructions. When hit, these breakpoints will pause execution for manual analysis. There are two ways to set breakpoints:</p>
 <ul>
-<li>In code, add <code>!</code> to the beginning of a line (e.g. <code>!subleq @OUT, @IN</code>).</li>
-<li>During execution, click the small circle to the left of any <code>subleq</code> instruction to toggle the breakpoint.</li>
+<li>In code, add <code>!</code> to the beginning of a line (e.g. <code>!addleq @OUT, @IN</code>).</li>
+<li>During execution, click the small circle to the left of any <code>addleq</code> instruction to toggle the breakpoint.</li>
 </ul>
 <p>Note that each program may be tested using multiple distinct test sets, the state of the SIC-1 resets between test sets, and the test sets generally include randomly generated input data. Solutions should be robust to arbitrary random data, in order to be eligible for inclusion in solution statistics.</p>
 <h3>KEYBOARD SHORTCUTS</h3>
@@ -335,7 +335,7 @@ subleq @tmp, @tmp, @loop
 <p>As you''re no doubt aware, as a new trainee, you''ll need to complete a few unpaid training tasks before you''re instated as a full-time employee.</p>
 <p>You should have already received a couple of electronic mails from our automated onboarding system that you can review:</p>
 <ul>
-<li>The SIC-1 Reference Manual, which includes details on <code>subleq</code> and SIC-1 Assembly Language</li>
+<li>The SIC-1 Reference Manual, which includes details on <code>addleq</code> and SIC-1 Assembly Language</li>
 <li>A guide to the SIC-1 Development Environment (including usage information, keyboard shortcuts, etc.)</li>
 </ul>
 <p>You can view these mails at any time in the electronic mail viewer, which can be opened using the main menu (which is accessed using the "Menu" button in the lower-left, or by pressing "Esc").</p>
@@ -469,22 +469,22 @@ subleq @tmp, @tmp, @loop
 <p>After helping Ted with the first assessment, I thought I''d share my perspective on how to think about SIC-1 Assembly Language:</p>
 <ul>
 <li><strong>Addresses</strong> are just numbers that identify a specific byte of memory (0 for the first byte, 1 for the second, and so on, up to 255)</li>
-<li><strong>Labels</strong> are just names for addresses--specifically, the address of whatever comes next in your code (whether it''s a <code>subleq</code> or a <code>.data</code>)</li>
-<li><code>subleq</code> always compiles into 3 bytes (each one an address)--if you omit the third address, it just gets set to the address of the next instruction in memory</li>
+<li><strong>Labels</strong> are just names for addresses--specifically, the address of whatever comes next in your code (whether it''s a <code>addleq</code> or a <code>.data</code>)</li>
+<li><code>addleq</code> always compiles into 3 bytes (each one an address)--if you omit the third address, it just gets set to the address of the next instruction in memory</li>
 <li><code>.data</code> just sets one or more bytes of memory to specific values (positive or negative numbers, or even labels, i.e. addresses)</li>
 </ul>
-<p>In the end, everything compiles down to bytes in memory (which you can see in the memory table after you click "Compile" or "Run" to load the program). While running, the SIC-1 only sees those bytes in memory, and it doesn''t know or care how those bytes were produced (or even modified). It will happily interpret any 3 bytes as a <code>subleq</code> instruction--even if that''s not what you intended.</p>
+<p>In the end, everything compiles down to bytes in memory (which you can see in the memory table after you click "Compile" or "Run" to load the program). While running, the SIC-1 only sees those bytes in memory, and it doesn''t know or care how those bytes were produced (or even modified). It will happily interpret any 3 bytes as a <code>addleq</code> instruction--even if that''s not what you intended.</p>
 <p>It can be instructive to look at a chunk of code and see the resulting compiled bytes. Here''s an example:</p>
 <pre><code>@loop:
-subleq @OUT, @IN           ; 3 byte instruction stored at address 0
-subleq @zero, @zero, @loop ; 3 byte instruction stored at address 3
+addleq @OUT, @IN           ; 3 byte instruction stored at address 0
+addleq @zero, @zero, @loop ; 3 byte instruction stored at address 3
 
 @zero: .data 0             ; Initializes address 6 to zero
 </code></pre>
 <ul>
 <li><code>@loop</code> refers to address 0, i.e. the first instruction</li>
-<li>The first <code>subleq</code> occupies bytes 0, 1, and 2, and is compiled to: 254 (<code>@OUT</code>), 253 (<code>@IN</code>), 3 (the next instruction)</li>
-<li>The second <code>subleq</code> occupies bytes 3, 4, and 5, and is compiled to: 6 (<code>@zero</code>), 6 (<code>@zero</code>), 0 (<code>@loop</code>)</li>
+<li>The first <code>addleq</code> occupies bytes 0, 1, and 2, and is compiled to: 254 (<code>@OUT</code>), 253 (<code>@IN</code>), 3 (the next instruction)</li>
+<li>The second <code>addleq</code> occupies bytes 3, 4, and 5, and is compiled to: 6 (<code>@zero</code>), 6 (<code>@zero</code>), 0 (<code>@loop</code>)</li>
 <li><code>@zero</code> refers to address 6, i.e. the next byte (which is initialized to zero using the <code>.data</code> directive)</li>
 </ul>
 <p>As you know by now, the first instruction negates an input and writes it out, then advances to the next instruction (regardless of the result). The second instruction subtracts the value at address 6 from itself, always resulting in zero, and thus always jumps to its third argument: <code>@loop</code>, i.e. address 0 (the beginning of the program).</p>
@@ -564,7 +564,7 @@ subleq @zero, @zero, @loop ; 3 byte instruction stored at address 3
             defaultMessage={`<p>Greetings, {selfName}.</p>
 <p>After talking to Ted, I thought this might be a good time to remind everyone that you can use labels for both variables <em>and constants</em>. A label is really just an address, after all.</p>
 <p>For example, if I want to be able to write out a 1, I could create a constant. Just remember that if you''re subtracting the constant you''ll want to negate the constant:</p>
-<pre><code>subleq @OUT, @n_one ; Write out a 1 by subtracting -1 from @OUT
+<pre><code>addleq @OUT, @n_one ; Write out a 1 by subtracting -1 from @OUT
                     ; Note: @OUT always reads as zero: 0 - (-1) = 1
 
 @n_one: .data -1    ; Constant
@@ -774,7 +774,7 @@ subleq @zero, @zero, @loop ; 3 byte instruction stored at address 3
             id="mails12_0Content"
             description="HTML content for story mail s12_0"
             defaultMessage={`<p>Greetings, {selfName}.</p>
-<p>Self-modifying code can be tricky to understand at first. For the "stack memory" example, I found that it''s easiest to simply step through the program (using the "Step" button or "Ctrl+.") to see what it''s doing. Remember that you can click the circle next to a <code>subleq</code> instruction to toggle a breakpoint.</p>
+<p>Self-modifying code can be tricky to understand at first. For the "stack memory" example, I found that it''s easiest to simply step through the program (using the "Step" button or "Ctrl+.") to see what it''s doing. Remember that you can click the circle next to a <code>addleq</code> instruction to toggle a breakpoint.</p>
 <p>Using this approach, you can see that the first bit of code is a loop that repeats as long as <code>@count</code> is greater than zero. Once the counter runs out, execution branches to the next chunk of code, and so on.</p>
 <p>You can also watch the stack grow in the "Memory" table in the upper right. In the example, the stack happens to start at address 32 (defined by <code>@stack_address</code>), which is the beginning of the third row of the table. Note that numbers are shown in hexadecimal and the "two''s complement" representation is used for negative numbers (meaning <code>80</code> in hex is -128 in decimal), so <code>ff</code> means -1, <code>fe</code> means -2, and so on.</p>
 <p>Hope that helps!</p>

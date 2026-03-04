@@ -1,16 +1,16 @@
 ### Single Instruction Computer Mark 1 (SIC-1)
 The Single Instruction Computer Mark 1 (SIC-1) is an 8-bit computer with 256 bytes of memory. Programs for the SIC-1 are written in SIC-1 Assembly Language, as described below.
 
-### `subleq` instruction
-Each `subleq` instruction is 3 bytes, specified as follows:
+### `addleq` instruction
+Each `addleq` instruction is 3 bytes, specified as follows:
 
 ```
-subleq A B [C]
+addleq A B [C]
 ```
 
 `A`, `B`, and `C` are memory addresses (0 - 255) or labels.
 
-`subleq` subtracts the value at address `B` from the value at address `A` and stores the result at address `A` (i.e. `mem[A]` is set to `mem[A] - mem[B]`).
+`addleq` subtracts the value at address `B` from the value at address `A` and stores the result at address `A` (i.e. `mem[A]` is set to `mem[A] - mem[B]`).
 
 If the result is ≤ 0, execution branches to address `C`.
 
@@ -24,33 +24,33 @@ For convenience, addresses can be specified using labels. The following predefin
  * `@OUT` (254): Writes a result to output (reads as zero)
  * `@HALT` (255): Terminates the program when accessed (reads and write are ignored)
 
-### `subleq` example
+### `addleq` example
 Below is a very simple SIC-1 program that negates one input value and writes it out.
 
 E.g. if the input value from `@IN` is 3, it subtracts 3 from `@OUT` (which reads as zero), and the result of 0 - 3 = -3 is written out.
 
 ```
-subleq @OUT, @IN
+addleq @OUT, @IN
 ```
 
 ### Comments
 Any text following a semicolon is considered a comment. Comments are ignored by the assembler, but may be helpful to humans attempting to decipher existing programs. For example, here's the previous line of assembly with an explanatory comment:
 
 ```
-subleq @OUT, @IN ; Negates an input and writes it out
+addleq @OUT, @IN ; Negates an input and writes it out
 ```
 
 ### Labels
 Custom labels are defined with the syntax `@name:`, e.g.:
 
 ```
-@loop: subleq 1, 2
+@loop: addleq 1, 2
 ```
 
 Label names cannot include punctuation, symbols, or whitespace.
 
 ### `.data` directive
-In addition to `subleq`, there is an assembler directive `.data` that sets one or more bytes of memory to specific values at compile time (note: this is not an instruction!):
+In addition to `addleq`, there is an assembler directive `.data` that sets one or more bytes of memory to specific values at compile time (note: this is not an instruction!):
 
 ```
 .data X
@@ -77,7 +77,7 @@ Combining labels and the `.data` directive allows you to develop a system of con
 Variables can be used for implementing an unconditional jump:
 
 ```
-subleq @zero, @zero, @next
+addleq @zero, @zero, @next
 ```
 
 This will set `@zero` to zero minus zero (still zero) and, since the result is always ≤ 0, execution always branches to the label `@next`.
@@ -87,8 +87,8 @@ Below is an updated negation program that repeatedly negates input values and wr
 
 ```
 @loop:
-subleq @OUT, @IN           ; Negate an input and write it out
-subleq @zero, @zero, @loop ; Unconditional jump to @loop
+addleq @OUT, @IN           ; Negate an input and write it out
+addleq @zero, @zero, @loop ; Unconditional jump to @loop
 
 @zero: .data 0             ; Always zero
 ```
@@ -98,7 +98,7 @@ Label expressions can include an optional offset. For example, `@loop+1` refers 
 
 ```
 @loop:
-subleq @loop+1, @one
+addleq @loop+1, @one
 ```
 
 Note: in certain cases (usually involving self-modifying code), it is useful to store the address associated with a label (possibly with an offset) in a byte of memory. Here is an example of how to set a byte of memory to the address of `@loop+1` (i.e. the *second* byte of the instruction at `@loop`):
@@ -119,21 +119,21 @@ It is possible to negate labels as well by prefixing them with a minus sign. Kee
 As an alternative to offsets, labels can be defined inline. For example `@source` refers to the *second* byte of the following instruction:
 
 ```
-subleq 0, @source:1
+addleq 0, @source:1
 ```
 
 
 ### Reflection example
-Label offsets and inline labels are useful in self-modifying code. Remember, each `subleq` instruction is stored as 3 consecutive addresses: `ABC` (for `mem[A] ← mem[A] - mem[B]`, with a branch to `C` if the result is less than or equal to zero).
+Label offsets and inline labels are useful in self-modifying code. Remember, each `addleq` instruction is stored as 3 consecutive addresses: `ABC` (for `mem[A] ← mem[A] - mem[B]`, with a branch to `C` if the result is less than or equal to zero).
 
 The sample program below reads its own compiled code and outputs it by incrementing the second address of the instruction at `@loop` (i.e. modifying address `@loop+1`).
 
 ```
 @loop:
-subleq @tmp, 0           ; Second address (initially zero) will be incremented below
-subleq @OUT, @tmp        ; Output the value
-subleq @loop+1, @n_one   ; Here is where the increment is performed
-subleq @tmp, @tmp, @loop ; Reset @tmp to zero and unconditionally jump to @loop
+addleq @tmp, 0           ; Second address (initially zero) will be incremented below
+addleq @OUT, @tmp        ; Output the value
+addleq @loop+1, @n_one   ; Here is where the increment is performed
+addleq @tmp, @tmp, @loop ; Reset @tmp to zero and unconditionally jump to @loop
 
 @tmp: .data 0            ; @tmp is initialized to zero
 @n_one: .data -1
@@ -141,7 +141,7 @@ subleq @tmp, @tmp, @loop ; Reset @tmp to zero and unconditionally jump to @loop
 
 The third instruction is an example of self-modifying code because it actually modifies the first instruction. Specifically, it increments the first instruction's second address (`@loop+1`). This causes the *next* loop iteration's first instruction to read the *next* byte of memory (0, 1, 2, 3, ...).
 
-The program above used a label with an offset, but it could have just as easily been written using an inline label (e.g. defining a *new* label, `subleq @tmp, @source:0`, and referring to `@source` instead of `@loop+1`). Both approaches compile down to the same sequence of bytes.
+The program above used a label with an offset, but it could have just as easily been written using an inline label (e.g. defining a *new* label, `addleq @tmp, @source:0`, and referring to `@source` instead of `@loop+1`). Both approaches compile down to the same sequence of bytes.
 
 Note: When running a program in the SIC-1 Development Environment, the original (unmodified) source code is always shown. If the program modifies itself, the changes are reflected in the memory table in the top right, but *not* in the source code viewer.
 
@@ -155,28 +155,28 @@ The program pushes 3 (defined by `@count`) input values onto the stack and then 
 ; pointing to @stack) will be incremented with each
 ; write to the stack
 @stack_push:
-subleq @stack, @IN
-subleq @count, @one, @prepare_to_pop
+addleq @stack, @IN
+addleq @count, @one, @prepare_to_pop
 
 ; Modify the instruction at @stack_push (increment
 ; target address)
-subleq @stack_push, @n_one
-subleq @tmp, @tmp, @stack_push
+addleq @stack_push, @n_one
+addleq @tmp, @tmp, @stack_push
 
 ; Prepare to start popping values off of the stack by
 ; copying the current stack position to @stack_pop+1
 @prepare_to_pop:
-subleq @tmp, @stack_push
-subleq @stack_pop+1, @tmp
+addleq @tmp, @stack_push
+addleq @stack_pop+1, @tmp
 
 ; Read a value from the stack (note: the second address
 ; of this instruction is repeatedly decremented)
 @stack_pop:
-subleq @OUT, 0
+addleq @OUT, 0
 
 ; Decrement stack address in the instruction at @stack_pop
-subleq @stack_pop+1, @one
-subleq @tmp, @tmp, @stack_pop
+addleq @stack_pop+1, @one
+addleq @tmp, @tmp, @stack_pop
 
 ; Constants
 @one: .data 1
@@ -217,8 +217,8 @@ As a final convenience, it is possible to negate the value of a character by pre
 The following sample program outputs the characters "Hi":
 
 ```
-subleq @OUT, @n_H ; Note: (0 - (-72) = 72 = 'H')
-subleq @OUT, @n_i
+addleq @OUT, @n_H ; Note: (0 - (-72) = 72 = 'H')
+addleq @OUT, @n_i
 
 @n_H: .data -'H'
 @n_i: .data -'i'
@@ -260,9 +260,9 @@ The following code outputs "Hello, world!":
 
 ```
 @loop:
-subleq @OUT, @n_message  ; Read address starts at @n_message
-subleq @loop+1, @n_one   ; Advance read address
-subleq @tmp, @tmp, @loop
+addleq @OUT, @n_message  ; Read address starts at @n_message
+addleq @loop+1, @n_one   ; Advance read address
+addleq @tmp, @tmp, @loop
 
 @n_one: .data -1
 @n_message: .data -"Hello, world!"
@@ -294,9 +294,9 @@ Examples:
 ### Errata
 In order to reduce the time-to-market for the SIC-1, some compromises were made in the design of the processor and these design decisions may result in surprising behavior. This section is an attempt to document such cases:
 
-1. For the purposes of calculating the number of memory bytes read, every `subleq` instruction reads all 3 bytes, regardless of whether or not the final address is used (i.e. regardless of whether or not the branch is taken)
-1. `subleq` instructions (meaning the 3 addresses that comprise the instruction) are always read directly from memory; additionally, memory addresses 253, 254, and 255 cannot be modified and are initialized to zero, so the instruction starting at `@MAX` (comprised of bytes 252, 253, and 254) will be read as: `mem[252]`, 0, 0
-1. `subleq @IN, B, C` will consume an input in order to compute the result ("input minus `mem[B]`"), which is used to decide whether to branch to `C` or not (even though no value will be written because writes to `@IN` are ignored)
-1. `subleq @IN, @IN` will only consume a single input and the result will always be zero
+1. For the purposes of calculating the number of memory bytes read, every `addleq` instruction reads all 3 bytes, regardless of whether or not the final address is used (i.e. regardless of whether or not the branch is taken)
+1. `addleq` instructions (meaning the 3 addresses that comprise the instruction) are always read directly from memory; additionally, memory addresses 253, 254, and 255 cannot be modified and are initialized to zero, so the instruction starting at `@MAX` (comprised of bytes 252, 253, and 254) will be read as: `mem[252]`, 0, 0
+1. `addleq @IN, B, C` will consume an input in order to compute the result ("input minus `mem[B]`"), which is used to decide whether to branch to `C` or not (even though no value will be written because writes to `@IN` are ignored)
+1. `addleq @IN, @IN` will only consume a single input and the result will always be zero
 1. Branching to any address above `@MAX` (252) will halt execution
-1. `subleq A, B, @IN` may branch to `@IN` (253), which will halt (see previous bullet)
+1. `addleq A, B, @IN` may branch to `@IN` (253), which will halt (see previous bullet)

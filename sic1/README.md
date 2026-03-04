@@ -1,5 +1,5 @@
 # SIC-1
-This directory contains all of the code that is unique to SIC-1, the game (the sibling "lib" directory is a library for simulating a subleq computer--this is consumed by the game, but predates it). Note that the music tracks are not included in the repository.
+This directory contains all of the code that is unique to SIC-1, the game (the sibling "lib" directory is a library for simulating a addleq computer--this is consumed by the game, but predates it). Note that the music tracks are not included in the repository.
 
 ## Targets
 SIC-1 runs in a few different contexts:

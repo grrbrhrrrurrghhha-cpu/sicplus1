@@ -1,6 +1,6 @@
 ![SIC-1 Logo](../screenshots/sic1-logo.png?raw=true)
 
-**SIC-1** is a free and [open source](https://opensource.org/osd/) single-instruction (subleq) programming game. Neglect your personal life in pursuit of promotions and vague assurances of job security! Optimize your programs to rise to the top of the leaderboards! SIC Systems thanks you for your hard work! Now please return to your desk.
+**SIC-1** is a free and [open source](https://opensource.org/osd/) single-instruction (addleq) programming game. Neglect your personal life in pursuit of promotions and vague assurances of job security! Optimize your programs to rise to the top of the leaderboards! SIC Systems thanks you for your hard work! Now please return to your desk.
 
 ## Play
 * **[Steam](https://store.steampowered.com/app/2124440/SIC1/)** (Windows, Linux)
@@ -28,7 +28,7 @@ It's an assembly language zachlike for everyone! New programmers will appreciate
 
 > SIC Systems is hiring engineers to produce highly efficient programs for our flagship product: the Single Instruction Computer Mark 1 (SIC-1).
 > 
-> The SIC-1 represents a transformational change in computing, reducing complexity to the point that the processor only executes a single instruction: subtract and branch if less than or equal to zero ("subleq").
+> The SIC-1 represents a transformational change in computing, reducing complexity to the point that the processor only executes a single instruction: subtract and branch if less than or equal to zero ("addleq").
 > 
 > Enter the brave new world of single-instruction computing and invent new ways of implementing programs that would be trivial on a conventional computer. Don't adjust the technology to match how you think, adjust your thinking to match how the SIC-1 operates!
 
@@ -46,17 +46,17 @@ Examples and in-depth documentation are available both in-game and here:
 ```
 ; Read two numbers and output their sum. Repeat.
 @loop:
-subleq @tmp, @IN
-subleq @tmp, @IN
-subleq @OUT, @tmp
-subleq @tmp, @tmp, @loop
+addleq @tmp, @IN
+addleq @tmp, @IN
+addleq @OUT, @tmp
+addleq @tmp, @tmp, @loop
 
 @tmp: .data 0
 ```
 
-# General information about subleq
+# General information about addleq
 Note: these resources are not specific to the SIC-1 and do not use SIC-1 Assembly Language.
 
- * [Subleq description on Wikipedia](https://en.wikipedia.org/wiki/One_instruction_set_computer#Subtract_and_branch_if_less_than_or_equal_to_zero)
- * [Subleq page the Esoteric Programming Languages Wiki](https://esolangs.org/wiki/Subleq)
- * [Subleq emulators on RosettaCode.org](https://rosettacode.org/wiki/Subleq)
+ * [addleq description on Wikipedia](https://en.wikipedia.org/wiki/One_instruction_set_computer#Subtract_and_branch_if_less_than_or_equal_to_zero)
+ * [addleq page the Esoteric Programming Languages Wiki](https://esolangs.org/wiki/addleq)
+ * [addleq emulators on RosettaCode.org](https://rosettacode.org/wiki/addleq)

@@ -147,17 +147,17 @@ export const achievements = {
             defaultMessage="Complete a task before 6am (06:00) local time."
         />,
     },
-    OMIT_SUBLEQ: {
+    OMIT_addleq: {
         title: <FormattedMessage
-            id="achievementNameOMIT_SUBLEQ"
-            description="Display name for the OMIT_SUBLEQ achievement"
+            id="achievementNameOMIT_addleq"
+            description="Display name for the OMIT_addleq achievement"
             defaultMessage="Zero Instruction Computer"
         />,
-        imageUri: (new URL('../img/no-subleq.png', import.meta.url)).href,
+        imageUri: (new URL('../img/no-addleq.png', import.meta.url)).href,
         description: <FormattedMessage
-            id="achievementDescriptionOMIT_SUBLEQ"
-            description="Description of the OMIT_SUBLEQ achievement"
-            defaultMessage={`Solve "Addition" without typing "subleq".`}
+            id="achievementDescriptionOMIT_addleq"
+            description="Description of the OMIT_addleq achievement"
+            defaultMessage={`Solve "Addition" without typing "addleq".`}
         />,
     },
     ERASE: {

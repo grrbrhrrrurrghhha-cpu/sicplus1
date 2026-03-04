@@ -16,8 +16,8 @@ describe("SIC-1 Assembler", () => {
         });
 
         it("Instruction", () => {
-            assert.deepStrictEqual(Tokenizer.tokenizeLine("subleq 0, @one, @two+3"), [
-                { tokenType: TokenType.command, raw: "subleq" },
+            assert.deepStrictEqual(Tokenizer.tokenizeLine("addleq 0, @one, @two+3"), [
+                { tokenType: TokenType.command, raw: "addleq" },
                 { tokenType: TokenType.whiteSpace, raw: " " },
                 { tokenType: TokenType.numberLiteral, raw: "0" },
                 { tokenType: TokenType.comma, raw: "," },
@@ -30,9 +30,9 @@ describe("SIC-1 Assembler", () => {
         });
 
         it("Instruction with breakpoint", () => {
-            assert.deepStrictEqual(Tokenizer.tokenizeLine("!subleq 0, @one, @two+3"), [
+            assert.deepStrictEqual(Tokenizer.tokenizeLine("!addleq 0, @one, @two+3"), [
                 { tokenType: TokenType.exclamationMark, raw: "!" },
-                { tokenType: TokenType.command, raw: "subleq" },
+                { tokenType: TokenType.command, raw: "addleq" },
                 { tokenType: TokenType.whiteSpace, raw: " " },
                 { tokenType: TokenType.numberLiteral, raw: "0" },
                 { tokenType: TokenType.comma, raw: "," },
@@ -114,57 +114,57 @@ describe("SIC-1 Assembler", () => {
     });
 
     describe("Valid lines", () => {
-        it("subleq 2 constants", () => {
-            const parsed = Assembler.parseLine("subleq 1, 2");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq 2 constants", () => {
+            const parsed = Assembler.parseLine("addleq 1, 2");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [1, 2]);
         });
 
-        it("subleq 2 constants with comment", () => {
-            const parsed = Assembler.parseLine("subleq 1, 2;, 5");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq 2 constants with comment", () => {
+            const parsed = Assembler.parseLine("addleq 1, 2;, 5");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [1, 2]);
         });
 
-        it("subleq 3 constants", () => {
-            const parsed = Assembler.parseLine("subleq 1, 2, 4");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq 3 constants", () => {
+            const parsed = Assembler.parseLine("addleq 1, 2, 4");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [1, 2, 4]);
         });
 
-        it("subleq no commas", () => {
-            const parsed = Assembler.parseLine("subleq 2 3 4");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq no commas", () => {
+            const parsed = Assembler.parseLine("addleq 2 3 4");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [2, 3, 4]);
         });
 
-        it("subleq trailing tab", () => {
-            const parsed = Assembler.parseLine("subleq 2 3 4\t");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq trailing tab", () => {
+            const parsed = Assembler.parseLine("addleq 2 3 4\t");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [2, 3, 4]);
         });
 
-        it("subleq trailing space", () => {
-            const parsed = Assembler.parseLine("subleq 2 3 4   ");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq trailing space", () => {
+            const parsed = Assembler.parseLine("addleq 2 3 4   ");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [2, 3, 4]);
         });
 
-        it("subleq only commas", () => {
-            const parsed = Assembler.parseLine("subleq 2,3,4");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq only commas", () => {
+            const parsed = Assembler.parseLine("addleq 2,3,4");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [2, 3, 4]);
         });
 
-        it("subleq spaces and commas", () => {
-            const parsed = Assembler.parseLine("subleq 2 , 3 , 4");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq spaces and commas", () => {
+            const parsed = Assembler.parseLine("addleq 2 , 3 , 4");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [2, 3, 4]);
         });
 
-        it("subleq inline labels", () => {
-            const parsed = Assembler.parseLine("@command1:@command2:subleq @inline0:2, @inline1:3 @inline2:@inline2_2: @inline2_3: 4");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq inline labels", () => {
+            const parsed = Assembler.parseLine("@command1:@command2:addleq @inline0:2, @inline1:3 @inline2:@inline2_2: @inline2_3: 4");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [2, 3, 4]);
             assert.deepStrictEqual(parsed.labelDefinitions, [
                 { label: "command1", offset: 0 },
@@ -177,34 +177,34 @@ describe("SIC-1 Assembler", () => {
             ]);
         });
 
-        it("subleq with breakpoint", () => {
-            const parsed = Assembler.parseLine("!subleq 2 3 4");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq with breakpoint", () => {
+            const parsed = Assembler.parseLine("!addleq 2 3 4");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [2, 3, 4]);
             assert.ok(parsed.breakpoint);
         });
 
-        it("subleq with breakpoint and space first", () => {
-            const parsed = Assembler.parseLine(" ! subleq 2 3 4");
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+        it("addleq with breakpoint and space first", () => {
+            const parsed = Assembler.parseLine(" ! addleq 2 3 4");
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [2, 3, 4]);
             assert.ok(parsed.breakpoint);
         });
 
-        it("subleq 2 references", () => {
-            const line = "subleq @one, @two";
+        it("addleq 2 references", () => {
+            const line = "addleq @one, @two";
             const parsed = Assembler.parseLine(line);
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [
                 { label: "one", offset: 0, context: { sourceLineNumber: 1, sourceLine: line } },
                 { label: "two", offset: 0, context: { sourceLineNumber: 1, sourceLine: line } },
             ]);
         });
 
-        it("subleq 3 references", () => {
-            const line = "subleq @one, @two, @three";
+        it("addleq 3 references", () => {
+            const line = "addleq @one, @two, @three";
             const parsed = Assembler.parseLine(line);
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [
                 { label: "one", offset: 0, context: { sourceLineNumber: 1, sourceLine: line } },
                 { label: "two", offset: 0, context: { sourceLineNumber: 1, sourceLine: line } },
@@ -212,10 +212,10 @@ describe("SIC-1 Assembler", () => {
             ]);
         });
 
-        it("subleq 3 references with offsets", () => {
-            const line = "subleq @one+1, @two-1, @three+9";
+        it("addleq 3 references with offsets", () => {
+            const line = "addleq @one+1, @two-1, @three+9";
             const parsed = Assembler.parseLine(line);
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [
                 { label: "one", offset: 1, context: { sourceLineNumber: 1, sourceLine: line } },
                 { label: "two", offset: -1, context: { sourceLineNumber: 1, sourceLine: line } },
@@ -223,10 +223,10 @@ describe("SIC-1 Assembler", () => {
             ]);
         });
 
-        it("subleq 3 references with offsets, no commas", () => {
-            const line = "subleq @one+1 @two-1 @three+9";
+        it("addleq 3 references with offsets, no commas", () => {
+            const line = "addleq @one+1 @two-1 @three+9";
             const parsed = Assembler.parseLine(line);
-            assert.equal(parsed.command, sic1.Command.subleqInstruction);
+            assert.equal(parsed.command, sic1.Command.addleqInstruction);
             assert.deepStrictEqual(parsed.expressions, [
                 { label: "one", offset: 1, context: { sourceLineNumber: 1, sourceLine: line } },
                 { label: "two", offset: -1, context: { sourceLineNumber: 1, sourceLine: line } },
@@ -409,40 +409,40 @@ describe("SIC-1 Assembler", () => {
     });
 
     describe("Invalid lines", () => {
-        it("subleq no arguments", () => {
-            assert.throws(() => Assembler.parseLine("subleq"));
+        it("addleq no arguments", () => {
+            assert.throws(() => Assembler.parseLine("addleq"));
         });
 
-        it("subleq too few arguments", () => {
-            assert.throws(() => Assembler.parseLine("subleq 1"));
+        it("addleq too few arguments", () => {
+            assert.throws(() => Assembler.parseLine("addleq 1"));
         });
 
-        it("subleq no spaces", () => {
-            assert.throws(() => Assembler.parseLine("subleq @one@two"));
+        it("addleq no spaces", () => {
+            assert.throws(() => Assembler.parseLine("addleq @one@two"));
         });
 
-        it("subleq no space after command", () => {
-            assert.throws(() => Assembler.parseLine("subleq@one @two"));
+        it("addleq no space after command", () => {
+            assert.throws(() => Assembler.parseLine("addleq@one @two"));
         });
 
-        it("subleq comma after command", () => {
-            assert.throws(() => Assembler.parseLine("subleq,@one @two"));
+        it("addleq comma after command", () => {
+            assert.throws(() => Assembler.parseLine("addleq,@one @two"));
         });
 
-        it("subleq comma after inline command", () => {
-            assert.throws(() => Assembler.parseLine("subleq @one @inline:, @two"));
+        it("addleq comma after inline command", () => {
+            assert.throws(() => Assembler.parseLine("addleq @one @inline:, @two"));
         });
 
-        it("subleq repeated commas", () => {
-            assert.throws(() => Assembler.parseLine("subleq @one,,@two"));
+        it("addleq repeated commas", () => {
+            assert.throws(() => Assembler.parseLine("addleq @one,,@two"));
         });
 
-        it("subleq repeated commas and spaces", () => {
-            assert.throws(() => Assembler.parseLine("subleq @one, , @two"));
+        it("addleq repeated commas and spaces", () => {
+            assert.throws(() => Assembler.parseLine("addleq @one, , @two"));
         });
 
-        it("subleq too many arguments", () => {
-            const line = "subleq 1, 2, 3, 4";
+        it("addleq too many arguments", () => {
+            const line = "addleq 1, 2, 3, 4";
             let match = false;
             try {
                 Assembler.parseLine(line);
@@ -521,14 +521,14 @@ describe("SIC-1 Assembler", () => {
         });
 
         it("Breakpoint not at beginning", () => {
-            assert.throws(() => Assembler.parseLine("subleq 1 2 3 !"));
+            assert.throws(() => Assembler.parseLine("addleq 1 2 3 !"));
         });
     });
 
     describe("Valid programs", () => {
         it("Single instruction", () => {
             const program = Assembler.assemble(`
-                subleq @OUT, @IN
+                addleq @OUT, @IN
             `.split("\n"));
 
             assert.deepEqual(program.bytes, [sic1.Constants.addressOutput, sic1.Constants.addressInput, 3]);
@@ -537,8 +537,8 @@ describe("SIC-1 Assembler", () => {
         it("Negation loop with breakpoint", () => {
             const program = Assembler.assemble(`
                 @loop:
-                subleq @OUT, @IN
-                !subleq @zero, @zero, @loop
+                addleq @OUT, @IN
+                !addleq @zero, @zero, @loop
 
                 @zero: .data 0
             `.split("\n"));
@@ -553,7 +553,7 @@ describe("SIC-1 Assembler", () => {
 
             assert.deepEqual(program.variables, [ { label: "@zero", address: 6 } ]);
 
-            assert.strictEqual(program.sourceMap[0].command, sic1.Command.subleqInstruction);
+            assert.strictEqual(program.sourceMap[0].command, sic1.Command.addleqInstruction);
             assert.strictEqual(program.sourceMap[0].lineNumber, 2);
 
             assert.strictEqual(program.sourceMap[6].command, sic1.Command.dataDirective);
@@ -593,20 +593,20 @@ describe("SIC-1 Assembler", () => {
         it("Inline label in passthrough loop", () => {
             const program = Assembler.assemble(`
                 @loop:
-                subleq @tmp: 0, @IN
-                subleq @tmp, @IN
-                subleq @OUT, @tmp
-                subleq @tmp, @tmp, @loop
+                addleq @tmp: 0, @IN
+                addleq @tmp, @IN
+                addleq @OUT, @tmp
+                addleq @tmp, @tmp, @loop
             `.split("\n"));
 
             assert.deepEqual(program.bytes, [0, 253, 3, 0, 253, 6, 254, 0, 9, 0, 0, 0]);
-            assert.strictEqual(program.sourceMap[0].command, sic1.Command.subleqInstruction);
+            assert.strictEqual(program.sourceMap[0].command, sic1.Command.addleqInstruction);
             assert.strictEqual(program.sourceMap[0].lineNumber, 2);
-            assert.strictEqual(program.sourceMap[3].command, sic1.Command.subleqInstruction);
+            assert.strictEqual(program.sourceMap[3].command, sic1.Command.addleqInstruction);
             assert.strictEqual(program.sourceMap[3].lineNumber, 3);
-            assert.strictEqual(program.sourceMap[6].command, sic1.Command.subleqInstruction);
+            assert.strictEqual(program.sourceMap[6].command, sic1.Command.addleqInstruction);
             assert.strictEqual(program.sourceMap[6].lineNumber, 4);
-            assert.strictEqual(program.sourceMap[9].command, sic1.Command.subleqInstruction);
+            assert.strictEqual(program.sourceMap[9].command, sic1.Command.addleqInstruction);
             assert.strictEqual(program.sourceMap[9].lineNumber, 5);
             assert.deepStrictEqual(program.variables, [ { label: "@tmp", address: 0 } ]);
         });
@@ -632,15 +632,15 @@ describe("SIC-1 Assembler", () => {
 
         it("Invalid value", () => {
             verifyError(`
-                subleq @OUT, @IN
+                addleq @OUT, @IN
                 @zero: .data 128
             `, "ValueRangeError", 3, { text: "128", rangeMin: -128, rangeMax: 127 });
         });
 
         it("Invalid address", () => {
             verifyError(`
-                subleq @OUT, @IN
-                subleq 256, @IN
+                addleq @OUT, @IN
+                addleq 256, @IN
             `, "AddressLiteralRangeError", 3, {
                 text: "256",
                 rangeMin: 0,
@@ -648,43 +648,43 @@ describe("SIC-1 Assembler", () => {
             });
         });
 
-        it("Invalid token type for subleq", () => {
+        it("Invalid token type for addleq", () => {
             verifyError(`
-                subleq 'a', 'b', 'c'
+                addleq 'a', 'b', 'c'
             `, "InvalidAddressExpressionError", 2, { text: "'a'" });
         });
 
-        it("Invalid argument count for subleq", () => {
+        it("Invalid argument count for addleq", () => {
             verifyError(`
-                subleq @OUT, @IN
-                subleq @OUT
-            `, "InvalidSubleqArgumentCountError", 3, { number: 1, rangeMin: 2, rangeMax: 3 });
+                addleq @OUT, @IN
+                addleq @OUT
+            `, "InvalidaddleqArgumentCountError", 3, { number: 1, rangeMin: 2, rangeMax: 3 });
         });
 
-        it("No arguments for subleq", () => {
+        it("No arguments for addleq", () => {
             verifyError(`
-                subleq @OUT, @IN
-                subleq
-            `, "InvalidSubleqArgumentCountError", 3, { number: 0, rangeMin: 2, rangeMax: 3 });
+                addleq @OUT, @IN
+                addleq
+            `, "InvalidaddleqArgumentCountError", 3, { number: 0, rangeMin: 2, rangeMax: 3 });
         });
 
         it("No arguments for .data", () => {
             verifyError(`
-                subleq @OUT, @IN
+                addleq @OUT, @IN
                 .data
             `, "InvalidDataArgumentCountError", 3, { number: 0, rangeMin: 1 });
         });
 
         it("Invalid command", () => {
             verifyError(`
-                subleq @OUT, @IN
+                addleq @OUT, @IN
                 .duh 1
             `, "InvalidCommandError", 3, { text: ".duh" });
         });
 
         it("Label redefinition", () => {
             verifyError(`
-                subleq @OUT, @IN
+                addleq @OUT, @IN
                 @tmp: .data 5
                 @tmp: .data 6
             `, "LabelAlreadyDefinedError", 4, { text: "@tmp" });
@@ -694,10 +694,10 @@ describe("SIC-1 Assembler", () => {
             verifyError(`
                 @tmp:
                 @loop:
-                subleq @tmp, @IN
-                subleq @tmp, @n_0
-                subleq @OUT, @tmp
-                subleq @tmp, @tmp, @loop
+                addleq @tmp, @IN
+                addleq @tmp, @n_0
+                addleq @OUT, @tmp
+                addleq @tmp, @tmp, @loop
             
                 @n_0: .data -'0'
                 @tmp: .data 0
@@ -706,8 +706,8 @@ describe("SIC-1 Assembler", () => {
 
         it("Missing label", () => {
             verifyError(`
-                subleq @OUT, @IN
-                subleq @zero, @zero, @loop
+                addleq @OUT, @IN
+                addleq @zero, @zero, @loop
 
                 @zero: .data 0
             `, "UndefinedReferenceError", 3, { text: "@loop" });
@@ -716,20 +716,20 @@ describe("SIC-1 Assembler", () => {
         it("Missing variable", () => {
             verifyError(`
                 @loop:
-                subleq @OUT, @IN
-                subleq @zero, @zero, @loop
+                addleq @OUT, @IN
+                addleq @zero, @zero, @loop
             `, "UndefinedReferenceError", 4, { text: "@zero" });
         });
 
         it("Invalid offset", () => {
             verifyError(`
                 @loop:
-                subleq @OUT, @IN
-                subleq @OUT, @IN, @loop-1
+                addleq @OUT, @IN
+                addleq @OUT, @IN, @loop-1
             `, "AddressReferenceRangeError", 4, { text: "@loop-1", number: -1, rangeMin: 0, rangeMax: 255 });
         });
 
-        it("Breakpoint not on subleq instruction", () => {
+        it("Breakpoint not on addleq instruction", () => {
             verifyError(`
                 !.data 1 2 3
             `, "InvalidBreakpointError", 2);
@@ -755,7 +755,7 @@ describe("SIC-1 Assembler", () => {
 
         it("Missing comma or whitespace", () => {
             verifyError(`
-                subleq @a@b@c
+                addleq @a@b@c
             `, "MissingCommaOrWhitespaceError", 2, { text: "@b" });
         });
 
@@ -774,7 +774,7 @@ describe("SIC-1 Assembler", () => {
             // Test a wide range
             for (let i = 0; i <= 10; i++) {
                 verifyError(
-                    `subleq @last @last @last
+                    `addleq @last @last @last
                     ${".data -1\n".repeat(sic1.Constants.addressUserMax + i)}
                     @last: .data -2`, "ProgramTooLargeError");
             }
@@ -829,8 +829,8 @@ describe("SIC-1 Emulator", () => {
             inputs.map(n => -n),
             `
             @loop:
-            subleq @OUT, @IN
-            subleq @0, @0, @loop
+            addleq @OUT, @IN
+            addleq @0, @0, @loop
 
             @0: .data 0
         `);
@@ -843,8 +843,8 @@ describe("SIC-1 Emulator", () => {
             inputs.map(n => -n),
             `
             @🜂:
-            subleq @OUT, @IN
-            subleq @0, @0, @🜂
+            addleq @OUT, @IN
+            addleq @0, @0, @🜂
 
             @0: .data 0
         `);
@@ -856,12 +856,12 @@ describe("SIC-1 Emulator", () => {
             inputs,
             [-1, -123, 0, 0],
             `
-            subleq @IN, @one
-            subleq @OUT, @one
-            subleq @HALT, @one
-            subleq @OUT, @IN
-            subleq @OUT, @OUT
-            subleq @OUT, @HALT
+            addleq @IN, @one
+            addleq @OUT, @one
+            addleq @HALT, @one
+            addleq @OUT, @IN
+            addleq @OUT, @OUT
+            addleq @OUT, @HALT
             @one: .data 1
         `, (address, byte) => {
             if (byte !== 0) {
@@ -878,19 +878,19 @@ describe("SIC-1 Emulator", () => {
             inputs,
             [-34],
             `
-            subleq @IN, @IN             ; Burn an input
-            subleq @IN, @zero, @good1   ; Input 0 should branch
-            subleq @zero, @zero, @HALT
+            addleq @IN, @IN             ; Burn an input
+            addleq @IN, @zero, @good1   ; Input 0 should branch
+            addleq @zero, @zero, @HALT
             @good1:
-            subleq @IN, @zero, @good2   ; Input -1 should branch
-            subleq @zero, @zero, @HALT
+            addleq @IN, @zero, @good2   ; Input -1 should branch
+            addleq @zero, @zero, @HALT
             @good2:
-            subleq @IN, @zero, @good3   ; Input -127 should branch
-            subleq @zero, @zero, @HALT
+            addleq @IN, @zero, @good3   ; Input -127 should branch
+            addleq @zero, @zero, @HALT
             @good3:
-            subleq @IN, @zero, @HALT    ; Input 1 should not branch
-            subleq @IN, @zero, @HALT    ; Input 127 should not branch
-            subleq @OUT, @IN
+            addleq @IN, @zero, @HALT    ; Input 1 should not branch
+            addleq @IN, @zero, @HALT    ; Input 127 should not branch
+            addleq @OUT, @IN
             @zero: .data 0
         `, (address, byte) => {
             if (byte !== 0) {
@@ -904,13 +904,13 @@ describe("SIC-1 Emulator", () => {
             [99],
             [-3, 3, -4, 4, -99],
             `
-            subleq @OUT, @pthree
+            addleq @OUT, @pthree
 
             @three:
-            subleq @OUT, @pnthree
-            subleq @OUT, @pthree1
-            subleq @OUT, @pnthree1
-            subleq @OUT, -@three ; @three is 3, so -@three is -3, i.e. 253, i.e. @IN
+            addleq @OUT, @pnthree
+            addleq @OUT, @pthree1
+            addleq @OUT, @pnthree1
+            addleq @OUT, -@three ; @three is 3, so -@three is -3, i.e. 253, i.e. @IN
             
             @pthree: .data @three
             @pnthree: .data -@three
@@ -924,8 +924,8 @@ describe("SIC-1 Emulator", () => {
         let secondUpdate = true;
         let firstWriteAfterUpdate = true;
         const emulator = new Emulator(Assembler.assemble(`
-            subleq @tmp, @five
-            subleq @tmp, @tmp, @HALT
+            addleq @tmp, @five
+            addleq @tmp, @tmp, @HALT
 
             @five: .data 5
             @tmp: .data 0
@@ -950,7 +950,7 @@ describe("SIC-1 Emulator", () => {
                     assert.strictEqual(data.ip, 0);
                     assert.strictEqual(data.target, 7);
                     assert.strictEqual(data.sourceLineNumber, 1);
-                    assert.strictEqual(data.source.trim(), "subleq @tmp, @five");
+                    assert.strictEqual(data.source.trim(), "addleq @tmp, @five");
                     assert.strictEqual(data.cyclesExecuted, 0);
                     assert.strictEqual(data.memoryBytesAccessed, 0);
                     assert.deepEqual(data.variables, [
@@ -963,7 +963,7 @@ describe("SIC-1 Emulator", () => {
                     assert.strictEqual(data.ip, 3);
                     assert.strictEqual(data.target, 7);
                     assert.strictEqual(data.sourceLineNumber, 2);
-                    assert.strictEqual(data.source.trim(), "subleq @tmp, @tmp, @HALT");
+                    assert.strictEqual(data.source.trim(), "addleq @tmp, @tmp, @HALT");
                     assert.strictEqual(data.cyclesExecuted, 1);
                     assert.strictEqual(data.memoryBytesAccessed, 5);
                     assert.deepEqual(data.variables, [
@@ -981,9 +981,9 @@ describe("SIC-1 Emulator", () => {
         const inputs = [4, 5, 100, 101];
         const expectedOutputs = inputs.slice();
         const code = `
-            subleq @tmp, @IN
-            subleq @OUT, @tmp
-            subleq @zero, @zero, @HALT
+            addleq @tmp, @IN
+            addleq @OUT, @tmp
+            addleq @zero, @zero, @HALT
 
             @zero: .data 0
             @tmp: .data 0 ; Note: This is NOT reset! We're relying on the reset function instead.
@@ -1011,12 +1011,12 @@ describe("SIC-1 Emulator", () => {
 
     it("Halt", () => {
         for (const [program, shouldHalt] of [
-            ["subleq 0, 0, @MAX", false],
-            [`subleq 0, 0, ${Constants.addressInstructionMax}`, false],
-            ["subleq 0, 0, @MAX+1", true],
-            ["subleq 0, 0, @MAX+2", true],
-            ["subleq 0, 0, @HALT", true],
-            [`subleq 0, 0, ${Constants.addressInstructionMax + 1}`, true],
+            ["addleq 0, 0, @MAX", false],
+            [`addleq 0, 0, ${Constants.addressInstructionMax}`, false],
+            ["addleq 0, 0, @MAX+1", true],
+            ["addleq 0, 0, @MAX+2", true],
+            ["addleq 0, 0, @HALT", true],
+            [`addleq 0, 0, ${Constants.addressInstructionMax + 1}`, true],
         ] as const) {
             const emulator = new Emulator(Assembler.assemble(program.split("\n")));
     

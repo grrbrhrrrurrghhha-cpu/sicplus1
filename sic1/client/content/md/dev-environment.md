@@ -24,10 +24,10 @@ The memory table is shown in hexadecimal for compactness; hover over a cell to s
 
 During execution, the current instruction will be highlighted in both the code editor (center) and the memory table (upper right), current inputs and outputs are highlighted in the tables on the left, and variables are displayed in a table on the right (hover for hexadecimal and unsigned representations, if needed).
 
-To aid debugging, it is possible to set breakpoints on `subleq` instructions. When hit, these breakpoints will pause execution for manual analysis. There are two ways to set breakpoints:
+To aid debugging, it is possible to set breakpoints on `addleq` instructions. When hit, these breakpoints will pause execution for manual analysis. There are two ways to set breakpoints:
 
-* In code, add `!` to the beginning of a line (e.g. `!subleq @OUT, @IN`).
-* During execution, click the small circle to the left of any `subleq` instruction to toggle the breakpoint.
+* In code, add `!` to the beginning of a line (e.g. `!addleq @OUT, @IN`).
+* During execution, click the small circle to the left of any `addleq` instruction to toggle the breakpoint.
 
 Note that each program may be tested using multiple distinct test sets, the state of the SIC-1 resets between test sets, and the test sets generally include randomly generated input data. Solutions should be robust to arbitrary random data, in order to be eligible for inclusion in solution statistics.
 

@@ -30,7 +30,7 @@ export class Sic1Memory extends React.Component<Sic1MemoryProps> {
                 <td key={index} className={`${
                     (this.props.hasStarted && (this.props.highlightAddress === index))
                         ? "attention"
-                        : ((this.props.currentAddress !== null && index >= this.props.currentAddress && index < this.props.currentAddress + Constants.subleqInstructionBytes)
+                        : ((this.props.currentAddress !== null && index >= this.props.currentAddress && index < this.props.currentAddress + Constants.addleqInstructionBytes)
                             ? "emphasize"
                             : "")
                 }${

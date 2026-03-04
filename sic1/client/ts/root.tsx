@@ -596,15 +596,15 @@ export class Sic1Root extends React.Component<Sic1RootProps, Sic1RootState> {
             this.ensureAchievement("TIME_LATE");
         }
 
-        // Check for "no subleq" achievement
+        // Check for "no addleq" achievement
         if (this.state.puzzle.title === "Addition") {
-            const noSubleq = this.ide.current.getCode()
+            const noaddleq = this.ide.current.getCode()
                 .split("\n")
                 .map(line => Assembler.parseLine(line).command)
-                .every(command => (command !== Command.subleqInstruction));
+                .every(command => (command !== Command.addleqInstruction));
 
-            if (noSubleq) {
-                this.ensureAchievement("OMIT_SUBLEQ");
+            if (noaddleq) {
+                this.ensureAchievement("OMIT_addleq");
             }
         }
     }
@@ -1355,14 +1355,14 @@ export class Sic1Root extends React.Component<Sic1RootProps, Sic1RootState> {
 
                         case "InvalidBreakpointError": return <FormattedMessage
                             id="compilationErrorInvalidBreakpointError"
-                            description="Error message shown when the 'InvalidBreakpointError' compilation error is encountered, indicating a breakpoint was set somewhere other than a 'subleq' instruction"
-                            defaultMessage="Breakpoints are only supported on subleq instructions!"
+                            description="Error message shown when the 'InvalidBreakpointError' compilation error is encountered, indicating a breakpoint was set somewhere other than a 'addleq' instruction"
+                            defaultMessage="Breakpoints are only supported on addleq instructions!"
                             />;
 
                         case "InvalidCommandError": return <FormattedMessage
                             id="compilationErrorInvalidCommandError"
-                            description="Error message shown when the 'InvalidCommandError' compilation error is encountered, indicating a command other than 'subleq' and '.data' was encountered"
-                            defaultMessage={`Unknown command: "{command}" (valid commands are: "subleq" and ".data")!`}
+                            description="Error message shown when the 'InvalidCommandError' compilation error is encountered, indicating a command other than 'addleq' and '.data' was encountered"
+                            defaultMessage={`Unknown command: "{command}" (valid commands are: "addleq" and ".data")!`}
                             values={{
                                 command: error.context.text,
                             }}
@@ -1386,10 +1386,10 @@ export class Sic1Root extends React.Component<Sic1RootProps, Sic1RootState> {
                             }}
                             />;
 
-                        case "InvalidSubleqArgumentCountError": return <FormattedMessage
-                            id="compilationErrorInvalidSubleqArgumentCountError"
-                            description="Error message shown when the 'InvalidSubleqArgumentCountError' compilation error is encountered, indicating a 'subleq' instruction didn't have 2 or 3 addresses specified for it"
-                            defaultMessage={`Invalid number of arguments for "subleq": {count} (must be between {rangeMin} and {rangeMax}, inclusive)!`}
+                        case "InvalidaddleqArgumentCountError": return <FormattedMessage
+                            id="compilationErrorInvalidaddleqArgumentCountError"
+                            description="Error message shown when the 'InvalidaddleqArgumentCountError' compilation error is encountered, indicating a 'addleq' instruction didn't have 2 or 3 addresses specified for it"
+                            defaultMessage={`Invalid number of arguments for "addleq": {count} (must be between {rangeMin} and {rangeMax}, inclusive)!`}
                             values={{
                                 count: error.context.number,
                                 rangeMin: error.context.rangeMin,
@@ -1435,7 +1435,7 @@ export class Sic1Root extends React.Component<Sic1RootProps, Sic1RootState> {
 
                         case "MissingWhitespaceError": return <FormattedMessage
                             id="compilationErrorMissingWhitespaceError"
-                            description="Error message shown when the 'MissingWhitespaceError' compilation error is encountered, indicating there was no whitespace after a 'subleq' or '.data' command"
+                            description="Error message shown when the 'MissingWhitespaceError' compilation error is encountered, indicating there was no whitespace after a 'addleq' or '.data' command"
                             defaultMessage={`Whitespace is required after "{command}"!`}
                             values={{
                                 command: error.context.text,

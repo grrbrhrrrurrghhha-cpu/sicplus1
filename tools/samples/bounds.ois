@@ -1,10 +1,10 @@
-subleq @OUT, @a
-subleq @OUT, @b
-subleq @b, @n_one
-subleq @OUT, @b
-subleq @b, @n_one
-subleq @OUT, @b
-subleq @zero, @zero, @HALT
+addleq @OUT, @a
+addleq @OUT, @b
+addleq @b, @n_one
+addleq @OUT, @b
+addleq @b, @n_one
+addleq @OUT, @b
+addleq @zero, @zero, @HALT
 
 @a: .data -128
 @b: .data 127

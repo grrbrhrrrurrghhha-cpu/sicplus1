@@ -225,7 +225,7 @@ export function shuffleInPlace<T>(array: T[]): void {
 
 export const puzzleFlatArray: Puzzle[] = [
     {
-        title: "Subleq Instruction and Output",
+        title: "addleq Instruction and Output",
         io: [
             [[3], [-3]]
         ],
@@ -552,7 +552,7 @@ export const puzzleFlatArray: Puzzle[] = [
     {
         title: "Tokenizer",
         test: {
-            fixed: [[stringToNumbers("subleq @OUT @IN"), stringToNumbers(".data 0")]],
+            fixed: [[stringToNumbers("addleq @OUT @IN"), stringToNumbers(".data 0")]],
             createRandomTest: () => [stringToNumbers([1, 2, 3].map(n => String.fromCharCode(...[1, 2, 3].map(n2 => Math.floor(Math.random() * 75) + 48))).join(" "))],
             getExpectedOutput: input => input.map(seq => stringsToNumbers(String.fromCharCode(...seq.slice(0, seq.length - 1)).split(" "))),
         },
@@ -654,19 +654,19 @@ export const puzzleFlatArray: Puzzle[] = [
         ],
     },
     {
-        title: "Parse Subleq Instructions",
+        title: "Parse addleq Instructions",
         test: {
-            fixed: [[stringToNumbers("subleq 7 253 255\nsubleq 7 7 0\n")]],
-            createRandomTest: () => [stringToNumbers([1, 2, 3].map(n => `subleq ${[1, 2, 3].map(x => Math.floor(Math.random() * 256).toString()).join(" ")}`).join("\n") + "\n")],
+            fixed: [[stringToNumbers("addleq 7 253 255\naddleq 7 7 0\n")]],
+            createRandomTest: () => [stringToNumbers([1, 2, 3].map(n => `addleq ${[1, 2, 3].map(x => Math.floor(Math.random() * 256).toString()).join(" ")}`).join("\n") + "\n")],
             getExpectedOutput: input => input.map(seq => String.fromCharCode(...seq.slice(0, seq.length - 1))
-                .replace(/subleq/g, "")
+                .replace(/addleq/g, "")
                 .split(/[ \n]/)
                 .map(s => s.trim())
                 .filter(s => s.length > 0)
                 .map(s => Assembler.unsignedToSigned(parseInt(s)))),
         },
         io: [
-            [stringToNumbers("subleq 9 253 3\nsubleq 254 9 6\nsubleq 9 9 0\n"), [9, -3, 3, -2, 9, 6, 9, 9, 0]],
+            [stringToNumbers("addleq 9 253 3\naddleq 254 9 6\naddleq 9 9 0\n"), [9, -3, 3, -2, 9, 6, 9, 9, 0]],
         ],
     },
     {
@@ -674,11 +674,11 @@ export const puzzleFlatArray: Puzzle[] = [
         test: {
             fixed: [
                 [stringToNumbers(
-`subleq 18 17 3
-subleq 17 18 6
-subleq 254 17 9
-subleq 16 15 255
-subleq 18 18 0
+`addleq 18 17 3
+addleq 17 18 6
+addleq 254 17 9
+addleq 16 15 255
+addleq 18 18 0
 .data 1
 .data 5
 .data -1
@@ -696,11 +696,11 @@ subleq 18 18 0
                     const a2 = addresses[Math.floor(Math.random() * addresses.length)];
                     const a3 = addresses[Math.floor(Math.random() * addresses.length)];
                     return stringToNumbers(
-`subleq 15 ${a1} ${((Math.random() * 2) >= 1) ? 9 : 3}
-subleq 15 ${a2} ${((Math.random() * 2) >= 1) ? 9 : 6}
-subleq 15 ${a3} 9
-subleq 254 15 12
-subleq 15 15 255
+`addleq 15 ${a1} ${((Math.random() * 2) >= 1) ? 9 : 3}
+addleq 15 ${a2} ${((Math.random() * 2) >= 1) ? 9 : 6}
+addleq 15 ${a3} 9
+addleq 254 15 12
+addleq 15 15 255
 .data ${x}
 .data ${y}
 .data 0
@@ -708,11 +708,11 @@ subleq 15 15 255
                     );
                 })(),
                 stringToNumbers(
-`subleq 18 17 3
-subleq 17 18 6
-subleq 254 17 9
-subleq 16 15 255
-subleq 18 18 0
+`addleq 18 17 3
+addleq 17 18 6
+addleq 254 17 9
+addleq 16 15 255
+addleq 18 18 0
 .data 1
 .data 5
 .data -${Math.floor(Math.random() * 3) + 1}
@@ -738,14 +738,14 @@ subleq 18 18 0
             }),
         },
         io: [
-            // subleq @b @a
-            // subleq @b @a
-            // subleq @OUT @b @HALT
+            // addleq @b @a
+            // addleq @b @a
+            // addleq @OUT @b @HALT
 
             // @a: .data -9
             // @b: .data 0
 
-            [stringToNumbers("subleq 10 9 3\nsubleq 10 9 6\nsubleq 254 10 255\n\n.data -9\n.data 0\n"), [-18]],
+            [stringToNumbers("addleq 10 9 3\naddleq 10 9 6\naddleq 254 10 255\n\n.data -9\n.data 0\n"), [-18]],
         ],
     },
     {
@@ -754,17 +754,17 @@ subleq 18 18 0
             // Derived from a minimal reflector:
             //
             // @read:
-            // subleq @l3+2 0 3
-            // subleq @OUT @l3+2 6
-            // @l3: subleq @read+1, @l4+2 0
-            // @l4: subleq @counter 0 @HALT ; Replace that second address to change increment
-            // subleq @l3+2 @l3+2 @read
+            // addleq @l3+2 0 3
+            // addleq @OUT @l3+2 6
+            // @l3: addleq @read+1, @l4+2 0
+            // @l4: addleq @counter 0 @HALT ; Replace that second address to change increment
+            // addleq @l3+2 @l3+2 @read
             // @counter: .data 15
             fixed: [[
-                ...[0, 2, 5].map(address => stringToNumbers(`subleq 8 0 3\nsubleq 254 8 6\nsubleq 1 11 0\nsubleq 15 ${address} 255\nsubleq 8 8 0\n.data 15\n`)),
+                ...[0, 2, 5].map(address => stringToNumbers(`addleq 8 0 3\naddleq 254 8 6\naddleq 1 11 0\naddleq 15 ${address} 255\naddleq 8 8 0\n.data 15\n`)),
 
                 // Output every other byte
-                stringToNumbers("subleq 254 0 3\nsubleq 1 12 6\nsubleq 14 12 0\nsubleq 15 15 255\n.data -2\n.data 1\n.data -11\n.data 0\n"),
+                stringToNumbers("addleq 254 0 3\naddleq 1 12 6\naddleq 14 12 0\naddleq 15 15 255\n.data -2\n.data 1\n.data -11\n.data 0\n"),
             ]],
 
             createRandomTest: () => {
@@ -773,10 +773,10 @@ subleq 18 18 0
                 for (let i = 0; i < 2; i++) {
                     // Derived from code that patches reading one byte:
                     //
-                    //@l1: subleq @l2 @a
-                    // @l2: subleq @l3+6 @b
-                    // @l3: subleq @OUT-4 @l1+1 ; This address changes
-                    // subleq @z @z @HALT
+                    //@l1: addleq @l2 @a
+                    // @l2: addleq @l3+6 @b
+                    // @l3: addleq @OUT-4 @l1+1 ; This address changes
+                    // addleq @z @z @HALT
                     // @a: .data 6
                     // @b: .data -4
                     // @z: .data 0
@@ -784,10 +784,10 @@ subleq 18 18 0
                     const a = Math.floor(Math.random() * 5) + 1;
                     const b = Math.floor(Math.random() * 5) + 1;
                     result.push(stringToNumbers(
-`subleq 3 12 3
-subleq ${6+a} 13 6
-subleq ${254-b} ${Math.floor(Math.random() * 10)} 9
-subleq 14 14 255
+`addleq 3 12 3
+addleq ${6+a} 13 6
+addleq ${254-b} ${Math.floor(Math.random() * 10)} 9
+addleq 14 14 255
 .data ${a}
 .data -${b}
 .data 0
@@ -798,14 +798,14 @@ subleq 14 14 255
                 // Derived from code that patches two instructions:
                 //
                 // @unmask:
-                // subleq @masked, @mask
-                // subleq @unmask, @n_1
-                // subleq @counter, @n_1, @unmask
-                // @masked: ; subleq @OUT, @o
+                // addleq @masked, @mask
+                // addleq @unmask, @n_1
+                // addleq @counter, @n_1, @unmask
+                // @masked: ; addleq @OUT, @o
                 // .data 53
                 // .data 70
                 // .data 67
-                // .data 70 ; subleq @o, @o, @HALT
+                // .data 70 ; addleq @o, @o, @HALT
                 // .data 70
                 // .data 54
                 // .data 21 ; @o: .data ...
@@ -816,9 +816,9 @@ subleq 14 14 255
                 const output = Math.floor(Math.random() * 30) + 20;
 
                 result.push(stringToNumbers(
-`subleq 9 16 3
-subleq 0 18 6
-subleq 17 18 0
+`addleq 9 16 3
+addleq 0 18 6
+addleq 17 18 0
 .data ${Assembler.unsignedToSigned(254 + mask)}
 .data ${15 + mask}
 .data ${12 + mask}
@@ -857,20 +857,20 @@ subleq 17 18 0
                 // ; Outputs its own first 12 bytes of code (negated)
                 //
                 // @start:
-                // subleq @OUT @start
-                // subleq @start+1 @n_1
-                // subleq @count @n_1 @start
-                // subleq @zero @zero @HALT
+                // addleq @OUT @start
+                // addleq @start+1 @n_1
+                // addleq @count @n_1 @start
+                // addleq @zero @zero @HALT
                 
                 // @n_1: .data -1
                 // .data 1
                 // @count: .data -11
                 // @zero: .data 0
                 
-                `subleq 254 0 3
-                subleq 1 12 6
-                subleq 14 12 0
-                subleq 15 15 255
+                `addleq 254 0 3
+                addleq 1 12 6
+                addleq 14 12 0
+                addleq 15 15 255
                 .data -1
                 .data 1
                 .data -11
