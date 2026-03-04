@@ -970,7 +970,7 @@ export class Emulator {
             const bv = (b === Constants.addressInput) ? input : this.readMemory(b);
 
             // Arithmetic (wraps around on overflow)
-            const result = (av - bv) & 0xff;
+            const result = (av + bv) & 0xff;
 
             // Write result
             const resultSigned = Assembler.unsignedToSigned(result);
